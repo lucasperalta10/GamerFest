@@ -1,0 +1,121 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { User } = require('../models');
+require('dotenv').config();
+
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user.id, username: user.username, role: user.role },
+    process.env.JWT_SECRET || 'gamerfest_jwt_secret_key_2026_super_secret',
+    { expiresIn: '30d' }
+  );
+};
+
+exports.register = async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
+    }
+
+    // Verificar si el correo o usuario ya existe
+    const existingUser = await User.findOne({
+      where: {
+        [require('sequelize').Op.or]: [{ email }, { username }]
+      }
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: 'El usuario o correo electrónico ya están registrados.' });
+    }
+
+    // Hash de la contraseña
+    const salt = await bcrypt.genSalt(10);
+    const password_hash = await bcrypt.hash(password, salt);
+
+    // Crear usuario (rol por defecto: ROL_USUARIO)
+    const user = await User.create({
+      username,
+      email,
+      password_hash,
+      role: 'ROL_USUARIO'
+    });
+
+    const token = generateToken(user);
+
+    return res.status(201).json({
+      message: 'Usuario registrado con éxito.',
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error en el registro de usuario.', error: error.message });
+  }
+};
+
+exports.login = async (req, res) => {
+  try {
+    const { emailOrUsername, password } = req.body;
+
+    if (!emailOrUsername || !password) {
+      return res.status(400).json({ message: 'El usuario/correo y contraseña son obligatorios.' });
+    }
+
+    // Buscar por correo o nombre de usuario
+    const user = await User.findOne({
+      where: {
+        [require('sequelize').Op.or]: [
+          { email: emailOrUsername },
+          { username: emailOrUsername }
+        ]
+      }
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Credenciales inválidas.' });
+    }
+
+    // Comparar contraseña
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Credenciales inválidas.' });
+    }
+
+    const token = generateToken(user);
+
+    return res.status(200).json({
+      message: 'Inicio de sesión exitoso.',
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error en el inicio de sesión.', error: error.message });
+  }
+};
+
+exports.getMe = async (req, res) => {
+  try {
+    // req.user ya fue adjuntado por el middleware
+    return res.status(200).json({
+      user: {
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email,
+        role: req.user.role
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error al obtener datos del perfil.', error: error.message });
+  }
+};

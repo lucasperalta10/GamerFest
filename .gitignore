@@ -1,0 +1,22 @@
+# Dependencias
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Entorno / Secretos
+.env
+backend/.env
+
+# Compilación y producción
+dist/
+build/
+
+# Archivos de sistema / IDEs
+.DS_Store
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -1,0 +1,44 @@
+/* App.css - Estilos específicos de componentes de nivel superior si es necesario */
+.page-header {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.filter-section {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-input-wrapper {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.auth-form-container {
+  max-width: 450px;
+  margin: 40px auto;
+  padding: 40px;
+}
