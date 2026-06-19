@@ -36,7 +36,8 @@ async function seed() {
       { name: 'Xbox Series X/S' },
       { name: 'Nintendo Switch' },
       { name: 'PlayStation 4' },
-      { name: 'Xbox One' }
+      { name: 'Xbox One' },
+      { name: 'Nintendo Switch 2' }
     ];
     const platforms = await Platform.bulkCreate(platformsData);
     console.log('Plataformas creadas.');
@@ -63,73 +64,193 @@ async function seed() {
       password_hash: userPasswordHash,
       role: 'ROL_USUARIO'
     });
-    console.log('Usuarios de prueba creados:');
-    console.log(' - Admin: admin / admin123');
     console.log(' - Usuario: gamer / user123');
-
-    // 5. Crear Videojuegos
+    // 5. Crear Videojuego
     const gamesData = [
       {
-        title: 'Grand Theft Auto VI',
-        description: 'La próxima entrega de la legendaria serie Grand Theft Auto de Rockstar Games, ambientada en Vice City.',
-        release_date: '2025-10-31',
-        image_url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=600&auto=format&fit=crop',
+        title: 'Animal Crossing: New Horizons – Switch 2 Edition',
+        description: 'Una versión mejorada del aclamado simulador de vida de Nintendo, optimizada para la nueva generación con mejores gráficos y nuevas opciones de personalización.',
+        release_date: '2026-01-15',
+        image_url: '/images/games/animalcrossing.jpg',
+        platforms: ['Nintendo Switch 2']
+      },
+      {
+        title: '2XKO',
+        description: 'El esperado juego de lucha por parejas de Riot Games ambientado en el universo de League of Legends.',
+        release_date: '2026-01-20',
+        image_url: '/images/games/2XKO.webp',
+        platforms: ['PC', 'PlayStation 5', 'Xbox Series X/S']
+      },
+      {
+        title: 'Dragon Quest VII Reimagined',
+        description: 'Un remake completo de la séptima entrega de la legendaria saga Dragon Quest con gráficos modernos y mejoras de calidad de vida.',
+        release_date: '2026-02-05',
+        image_url: '/images/games/dragonquestviireimagened.avif',
+        platforms: ['PC', 'Nintendo Switch', 'PlayStation 5', 'Xbox Series X/S']
+      },
+      {
+        title: 'Yakuza Kiwami 3 & Dark Ties',
+        description: 'La esperada reedición de la tercera entrega de la saga Yakuza en el motor Dragon Engine, junto con contenido de historia inédito.',
+        release_date: '2026-02-12',
+        image_url: '/images/games/yakuza3ydarkties.avif',
+        platforms: ['PC', 'PlayStation 5', 'Xbox Series X/S', 'PlayStation 4']
+      },
+      {
+        title: 'Avowed',
+        description: 'El juego de rol en primera persona de Obsidian Entertainment ambientado en el universo de Pillars of Eternity.',
+        release_date: '2026-02-17',
+        image_url: '/images/games/avowed.jpeg',
+        platforms: ['PC', 'Xbox Series X/S']
+      },
+      {
+        title: 'Resident Evil Requiem',
+        description: 'La nueva entrega principal de la saga de terror de Capcom, prometiendo regresar a las raíces de la supervivencia y el pánico psicológico.',
+        release_date: '2026-02-27',
+        image_url: '/images/games/residentevilrequiem.jpg',
+        platforms: ['PC', 'PlayStation 5', 'Xbox Series X/S']
+      },
+      {
+        title: 'Marathon',
+        description: 'El shooter de extracción de ciencia ficción multijugador en primera persona desarrollado por Bungie.',
+        release_date: '2026-03-05',
+        image_url: '/images/games/marathon.png',
+        platforms: ['PC', 'PlayStation 5', 'Xbox Series X/S']
+      },
+      {
+        title: 'Crimson Desert',
+        description: 'Un juego de acción y aventura en un mundo abierto medieval desarrollado por Pearl Abyss que narra la lucha por la supervivencia en Pywel.',
+        release_date: '2026-03-19',
+        image_url: '/images/games/crimsondesert.jpg',
+        platforms: ['PC', 'PlayStation 5', 'Xbox Series X/S']
+      },
+      {
+        title: 'Starfield (PS5 Edition)',
+        description: 'La llegada del épico juego de rol espacial de Bethesda Game Studios a la consola PlayStation 5 con todas las actualizaciones y DLC incluidos.',
+        release_date: '2026-04-07',
+        image_url: '/images/games/starfield.avif',
+        platforms: ['PlayStation 5']
+      },
+      {
+        title: 'Forza Horizon 6',
+        description: 'La franquicia de velocidad y mundo abierto de Xbox regresa con un nuevo mapa exótico y físicas de conducción de vanguardia.',
+        release_date: '2026-05-19',
+        image_url: '/images/games/forzahorizon6.avif',
+        platforms: ['PC', 'Xbox Series X/S']
+      },
+      {
+        title: 'Mina the Hollower',
+        description: 'Una aventura de acción con estética retro desarrollada por Yacht Club Games, creadores de Shovel Knight.',
+        release_date: '2026-05-29',
+        image_url: '/images/games/minathehollower.png',
+        platforms: ['PC', 'Nintendo Switch', 'PlayStation 5', 'Xbox Series X/S', 'PlayStation 4', 'Xbox One']
+      },
+      {
+        title: 'Gothic Remake',
+        description: 'El regreso triunfal del icónico RPG de Alkimia Interactive en un mundo vivo y peligroso recreado desde cero.',
+        release_date: '2026-06-05',
+        image_url: '/images/games/gothicremake.avif',
+        platforms: ['PC', 'PlayStation 5', 'Xbox Series X/S']
       },
       {
         title: 'Metroid Prime 4: Beyond',
         description: 'Samus Aran regresa en una nueva aventura intergaláctica de la saga Metroid Prime desarrollada por Retro Studios.',
-        release_date: '2025-06-30',
-        image_url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600&auto=format&fit=crop',
+        release_date: '2026-06-30',
+        image_url: '/images/games/metroidprime4beyond.jpeg',
+        platforms: ['Nintendo Switch']
       },
       {
-        title: 'Elden Ring: Shadow of the Erdtree',
-        description: 'Expansión masiva del aclamado juego de rol y acción en mundo abierto de FromSoftware.',
-        release_date: '2024-06-21',
-        image_url: 'https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?q=80&w=600&auto=format&fit=crop',
+        title: 'DOOM: The Dark Ages – Revelations DLC',
+        description: 'La primera gran expansión de la precuela del Doom Slayer, expandiendo su arsenal medieval y los escenarios de asedio del infierno.',
+        release_date: '2026-07-07',
+        image_url: '/images/games/doomdarkagesdlc.jpeg',
+        platforms: ['PC', 'PlayStation 5', 'Xbox Series X/S']
+      },
+      {
+        title: 'Palworld (1.0 Launch)',
+        description: 'El lanzamiento de la versión 1.0 oficial de Palworld tras su exitoso paso por el Acceso Anticipado, con nuevos continentes y Pals.',
+        release_date: '2026-07-10',
+        image_url: '/images/games/palworld.jpg',
+        platforms: ['PC', 'Xbox Series X/S', 'Xbox One']
+      },
+      {
+        title: 'Elden Ring: Tarnished Edition',
+        description: 'Una versión definitiva que recopila el aclamado Elden Ring junto con la expansión Shadow of the Erdtree en un solo disco.',
+        release_date: '2026-08-28',
+        image_url: '/images/games/eldenringtarnishededition.jpg',
+        platforms: ['PC', 'PlayStation 5', 'Xbox Series X/S']
+      },
+      {
+        title: 'Grand Theft Auto VI',
+        description: 'La próxima entrega de la legendaria serie Grand Theft Auto de Rockstar Games, ambientada en Vice City.',
+        release_date: '2026-11-20',
+        image_url: '/images/games/gtavi.png',
+        platforms: ['PlayStation 5', 'Xbox Series X/S']
       },
       {
         title: 'Hollow Knight: Silksong',
         description: 'Juego de acción y aventura al estilo metroidvania desarrollado por Team Cherry. Encarna a Hornet en un vasto y misterioso reino.',
-        release_date: '2026-11-20',
-        image_url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=600&auto=format&fit=crop',
+        release_date: '2025-05-21',
+        image_url: '/images/games/hollowknightsilksong.jpg',
+        platforms: ['PC', 'Nintendo Switch', 'PlayStation 5', 'Xbox Series X/S']
       }
     ];
 
     const games = await Game.bulkCreate(gamesData);
     console.log('Videojuegos creados.');
 
-    // Relacionar Videojuegos con Plataformas
-    // GTA VI en PS5 y Xbox Series
-    await games[0].setPlatforms([platformMap['PlayStation 5'], platformMap['Xbox Series X/S']]);
-    // Metroid Prime 4 en Switch
-    await games[1].setPlatforms([platformMap['Nintendo Switch']]);
-    // Elden Ring en PC, PS5, Xbox Series, PS4, Xbox One
-    await games[2].setPlatforms([
-      platformMap['PC'],
-      platformMap['PlayStation 5'],
-      platformMap['Xbox Series X/S'],
-      platformMap['PlayStation 4'],
-      platformMap['Xbox One']
-    ]);
-    // Silksong en PC, Switch, PS5, Xbox Series
-    await games[3].setPlatforms([
-      platformMap['PC'],
-      platformMap['Nintendo Switch'],
-      platformMap['PlayStation 5'],
-      platformMap['Xbox Series X/S']
-    ]);
+    // Relacionar Videojuegos con Plataformas de forma dinámica
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+      const pNames = gamesData[i].platforms;
+      if (pNames && pNames.length > 0) {
+        const pIds = pNames.map(name => platformMap[name]).filter(id => id !== undefined);
+        await game.setPlatforms(pIds);
+      }
+    }
     console.log('Relaciones de plataformas establecidas.');
 
     // 6. Crear Eventos
     const currentYear = 2026;
     const eventsData = [
       {
+        title: 'Xbox Developer_Direct 2026',
+        description: 'Vistazo en profundidad a varios títulos previstos para Xbox y PC con entrevistas y secuencias de juego extendidas.',
+        event_date: `${currentYear}-01-18T18:00:00.000Z`,
+        type: 'showcase',
+        location_link: 'https://www.youtube.com/@xbox',
+        image_url: '/images/events/xboxdeveloperdirect.jpeg'
+      },
+      {
+        title: 'State of Play Enero 2026',
+        description: 'Presentación de novedades y actualizaciones sobre próximos juegos que llegarán a PlayStation 5 y PS VR2.',
+        event_date: `${currentYear}-01-28T22:00:00.000Z`,
+        type: 'showcase',
+        location_link: 'https://www.youtube.com/@playstation',
+        image_url: '/images/events/stateofplay.jpeg'
+      },
+      {
+        title: 'Nintendo Direct Febrero 2026',
+        description: 'Presentación general de los juegos que llegarán a Nintendo Switch durante la primera mitad de 2026.',
+        event_date: `${currentYear}-02-18T14:00:00.000Z`,
+        type: 'showcase',
+        location_link: 'https://www.youtube.com/user/nintendo',
+        image_url: '/images/events/nintendodirect.webp'
+      },
+      {
+        title: 'Pokémon Presents 2026',
+        description: 'Transmisión especial para celebrar el Día de Pokémon con anuncios de juegos y eventos de la franquicia.',
+        event_date: `${currentYear}-02-27T15:00:00.000Z`,
+        type: 'showcase',
+        location_link: 'https://www.youtube.com/user/pokemon',
+        image_url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=600&auto=format&fit=crop'
+      },
+      {
         title: 'Summer Game Fest 2026',
         description: 'La gran celebración anual de la industria de los videojuegos con novedades, primicias y avances exclusivos organizada por Geoff Keighley.',
         event_date: `${currentYear}-06-08T18:00:00.000Z`,
         type: 'showcase',
         location_link: 'https://www.youtube.com/@TheGameAwards',
-        image_url: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600&auto=format&fit=crop'
+        image_url: '/images/events/summergamefest.webp'
       },
       {
         title: 'Xbox Games Showcase 2026',
@@ -137,7 +258,7 @@ async function seed() {
         event_date: `${currentYear}-06-09T17:00:00.000Z`,
         type: 'showcase',
         location_link: 'https://www.twitch.tv/xbox',
-        image_url: 'https://images.unsplash.com/photo-1605901309584-818e25960a8f?q=80&w=600&auto=format&fit=crop'
+        image_url: '/images/events/xboxgamesshowcase.webp'
       },
       {
         title: 'Ubisoft Forward 2026',
@@ -153,7 +274,7 @@ async function seed() {
         event_date: `${currentYear}-06-17T14:00:00.000Z`,
         type: 'showcase',
         location_link: 'https://www.youtube.com/user/nintendo',
-        image_url: 'https://images.unsplash.com/photo-1566241477600-ac026ad43874?q=80&w=600&auto=format&fit=crop'
+        image_url: '/images/events/nintendodirect.webp'
       },
       {
         title: 'Gamescom Opening Night Live 2026',
@@ -162,6 +283,14 @@ async function seed() {
         type: 'showcase',
         location_link: 'https://www.gamescom.global',
         image_url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=600&auto=format&fit=crop'
+      },
+      {
+        title: 'Tokyo Game Show 2026',
+        description: 'Uno de los eventos de videojuegos más grandes de Asia, celebrado en el Makuhari Messe de Chiba, Japón.',
+        event_date: `${currentYear}-09-24T10:00:00.000Z`,
+        type: 'otro',
+        location_link: 'https://tgs.nikkeibp.co.jp/tgs/en/',
+        image_url: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600&auto=format&fit=crop'
       },
       {
         title: 'The Game Awards 2026',

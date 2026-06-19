@@ -101,7 +101,7 @@ export default function Home() {
       {/* Hero Header */}
       <header className="page-header" style={{ position: 'relative', overflow: 'hidden', borderRadius: 'var(--radius-lg)', padding: '60px 20px', background: 'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%)', border: '1px solid var(--border-color)', marginBottom: '50px' }}>
         <h1 className="gradient-accent-text" style={{ fontSize: '3.5rem', fontWeight: 800, marginBottom: '16px' }}>
-          GamerFest MVP
+          GamerFest
         </h1>
         <p className="page-subtitle" style={{ maxWidth: '600px', margin: '0 auto', fontSize: '1.2rem' }}>
           Tu calendario y listado centralizado de la industria de los videojuegos. Consulta lanzamientos, eventos y conferencias clave en un solo lugar.
