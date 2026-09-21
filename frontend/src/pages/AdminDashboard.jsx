@@ -1,19 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Plus, Edit2, Trash2, Gamepad, Calendar, LayoutDashboard } from 'lucide-react';
 import { useApp, API_URL } from '../context/AppContext';
 import Modal from '../components/Modal';
 
 export default function AdminDashboard() {
   const { user, token } = useApp();
-  const navigate = useNavigate();
-
-  // Redirigir si no es admin
-  useEffect(() => {
-    if (!user || user.role !== 'ROL_ADMIN') {
-      navigate('/');
-    }
-  }, [user, navigate]);
 
   const [activeTab, setActiveTab] = useState('games'); // 'games' | 'events'
   const [games, setGames] = useState([]);

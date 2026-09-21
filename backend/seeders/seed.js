@@ -37,7 +37,10 @@ async function seed() {
       { name: 'Nintendo Switch' },
       { name: 'PlayStation 4' },
       { name: 'Xbox One' },
-      { name: 'Nintendo Switch 2' }
+      { name: 'Nintendo Switch 2' },
+      { name: 'Android' },
+      { name: 'iOS' },
+      { name: 'VR/Meta Quest' }
     ];
     const platforms = await Platform.bulkCreate(platformsData);
     console.log('Plataformas creadas.');
@@ -49,7 +52,10 @@ async function seed() {
     });
 
     // 4. Crear Administrador Inicial
-    const adminPasswordHash = await bcrypt.hash('admin123', 10);
+    // Contraseñas configurables por variables de entorno (solo para desarrollo;
+    // en producción definir SEED_ADMIN_PASSWORD y SEED_USER_PASSWORD y NO usar los defaults)
+    const adminPassword = process.env.SEED_ADMIN_PASSWORD || 'admin123';
+    const adminPasswordHash = await bcrypt.hash(adminPassword, 10);
     await User.create({
       username: 'admin',
       email: 'admin@gamerfest.com',
@@ -57,14 +63,16 @@ async function seed() {
       role: 'ROL_ADMIN'
     });
 
-    const userPasswordHash = await bcrypt.hash('user123', 10);
+    const userPassword = process.env.SEED_USER_PASSWORD || 'user123';
+    const userPasswordHash = await bcrypt.hash(userPassword, 10);
     await User.create({
       username: 'gamer',
       email: 'gamer@gmail.com',
       password_hash: userPasswordHash,
       role: 'ROL_USUARIO'
     });
-    console.log(' - Usuario: gamer / user123');
+    console.log(` - Admin: admin / ${adminPassword}`);
+    console.log(` - Usuario: gamer / ${userPassword}`);
     // 5. Crear Videojuego
     const gamesData = [
       {

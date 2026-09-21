@@ -4,6 +4,8 @@ import { AppProvider } from './context/AppContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
+import ProtectedRoute from './components/ProtectedRoute';
+
 // Páginas
 import Home from './pages/Home';
 import CalendarView from './pages/CalendarView';
@@ -26,8 +28,22 @@ function App() {
               <Route path="/calendar" element={<CalendarView />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/favorites" element={<Favorites />} />
-              <Route path="/admin" element={<AdminDashboard />} />
+              <Route
+                path="/favorites"
+                element={
+                  <ProtectedRoute>
+                    <Favorites />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute requiredRole="ROL_ADMIN">
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </main>
           <Footer />

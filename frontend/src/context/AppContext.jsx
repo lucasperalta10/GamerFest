@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AppContext = createContext();
 
-export const API_URL = 'http://localhost:5000/api';
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const AppProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('gf_token') || null);

@@ -27,7 +27,8 @@ exports.getFavorites = async (req, res) => {
       events: user.favoriteEvents
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al obtener favoritos.', error: error.message });
+    console.error('Error al obtener favoritos.', error);
+    return res.status(500).json({ message: 'Error al obtener favoritos.' });
   }
 };
 
@@ -44,7 +45,8 @@ exports.addGameFavorite = async (req, res) => {
     await user.addFavoriteGame(game);
     return res.status(200).json({ message: 'Videojuego agregado a favoritos.' });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al agregar a favoritos.', error: error.message });
+    console.error('Error al agregar a favoritos.', error);
+    return res.status(500).json({ message: 'Error al agregar a favoritos.' });
   }
 };
 
@@ -61,7 +63,8 @@ exports.removeGameFavorite = async (req, res) => {
     await user.removeFavoriteGame(game);
     return res.status(200).json({ message: 'Videojuego removido de favoritos.' });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al remover de favoritos.', error: error.message });
+    console.error('Error al remover de favoritos.', error);
+    return res.status(500).json({ message: 'Error al remover de favoritos.' });
   }
 };
 
@@ -78,7 +81,8 @@ exports.addEventFavorite = async (req, res) => {
     await user.addFavoriteEvent(event);
     return res.status(200).json({ message: 'Evento agregado a favoritos.' });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al agregar a favoritos.', error: error.message });
+    console.error('Error al agregar a favoritos.', error);
+    return res.status(500).json({ message: 'Error al agregar a favoritos.' });
   }
 };
 
@@ -95,6 +99,7 @@ exports.removeEventFavorite = async (req, res) => {
     await user.removeFavoriteEvent(event);
     return res.status(200).json({ message: 'Evento removido de favoritos.' });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al remover de favoritos.', error: error.message });
+    console.error('Error al remover de favoritos.', error);
+    return res.status(500).json({ message: 'Error al remover de favoritos.' });
   }
 };

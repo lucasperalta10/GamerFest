@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
-require('dotenv').config();
+const { getJwtSecret } = require('../config/jwt');
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -10,7 +10,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'gamerfest_jwt_secret_key_2026_super_secret');
+    const decoded = jwt.verify(token, getJwtSecret());
 
     const user = await User.findByPk(decoded.id);
     if (!user) {
@@ -20,7 +20,8 @@ const authMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Token inválido o expirado.', error: error.message });
+    console.error('Error de autenticación:', error.message);
+    return res.status(401).json({ message: 'Token inválido o expirado.' });
   }
 };
 

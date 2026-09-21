@@ -36,7 +36,8 @@ exports.getGames = async (req, res) => {
 
     return res.status(200).json(games);
   } catch (error) {
-    return res.status(500).json({ message: 'Error al obtener videojuegos.', error: error.message });
+    console.error('Error al obtener videojuegos.', error);
+    return res.status(500).json({ message: 'Error al obtener videojuegos.' });
   }
 };
 
@@ -59,7 +60,8 @@ exports.getGameById = async (req, res) => {
 
     return res.status(200).json(game);
   } catch (error) {
-    return res.status(500).json({ message: 'Error al obtener detalle de videojuego.', error: error.message });
+    console.error('Error al obtener detalle de videojuego.', error);
+    return res.status(500).json({ message: 'Error al obtener detalle de videojuego.' });
   }
 };
 
@@ -89,7 +91,8 @@ exports.createGame = async (req, res) => {
 
     return res.status(201).json({ message: 'Videojuego creado con éxito.', game: createdGame });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al crear videojuego.', error: error.message });
+    console.error('Error al crear videojuego.', error);
+    return res.status(500).json({ message: 'Error al crear videojuego.' });
   }
 };
 
@@ -121,7 +124,8 @@ exports.updateGame = async (req, res) => {
 
     return res.status(200).json({ message: 'Videojuego actualizado con éxito.', game: updatedGame });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al actualizar videojuego.', error: error.message });
+    console.error('Error al actualizar videojuego.', error);
+    return res.status(500).json({ message: 'Error al actualizar videojuego.' });
   }
 };
 
@@ -137,7 +141,8 @@ exports.deleteGame = async (req, res) => {
     await game.destroy();
     return res.status(200).json({ message: 'Videojuego eliminado con éxito.' });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al eliminar videojuego.', error: error.message });
+    console.error('Error al eliminar videojuego.', error);
+    return res.status(500).json({ message: 'Error al eliminar videojuego.' });
   }
 };
 
@@ -147,6 +152,7 @@ exports.getPlatforms = async (req, res) => {
     const platforms = await Platform.findAll({ order: [['name', 'ASC']] });
     return res.status(200).json(platforms);
   } catch (error) {
-    return res.status(500).json({ message: 'Error al obtener plataformas.', error: error.message });
+    console.error('Error al obtener plataformas.', error);
+    return res.status(500).json({ message: 'Error al obtener plataformas.' });
   }
 };

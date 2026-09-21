@@ -37,7 +37,8 @@ exports.getEvents = async (req, res) => {
 
     return res.status(200).json(events);
   } catch (error) {
-    return res.status(500).json({ message: 'Error al obtener eventos.', error: error.message });
+    console.error('Error al obtener eventos.', error);
+    return res.status(500).json({ message: 'Error al obtener eventos.' });
   }
 };
 
@@ -52,7 +53,8 @@ exports.getEventById = async (req, res) => {
 
     return res.status(200).json(event);
   } catch (error) {
-    return res.status(500).json({ message: 'Error al obtener detalle de evento.', error: error.message });
+    console.error('Error al obtener detalle de evento.', error);
+    return res.status(500).json({ message: 'Error al obtener detalle de evento.' });
   }
 };
 
@@ -75,7 +77,8 @@ exports.createEvent = async (req, res) => {
 
     return res.status(201).json({ message: 'Evento creado con éxito.', event });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al crear evento.', error: error.message });
+    console.error('Error al crear evento.', error);
+    return res.status(500).json({ message: 'Error al crear evento.' });
   }
 };
 
@@ -100,7 +103,8 @@ exports.updateEvent = async (req, res) => {
 
     return res.status(200).json({ message: 'Evento actualizado con éxito.', event });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al actualizar evento.', error: error.message });
+    console.error('Error al actualizar evento.', error);
+    return res.status(500).json({ message: 'Error al actualizar evento.' });
   }
 };
 
@@ -116,6 +120,7 @@ exports.deleteEvent = async (req, res) => {
     await event.destroy();
     return res.status(200).json({ message: 'Evento eliminado con éxito.' });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al eliminar evento.', error: error.message });
+    console.error('Error al eliminar evento.', error);
+    return res.status(500).json({ message: 'Error al eliminar evento.' });
   }
 };

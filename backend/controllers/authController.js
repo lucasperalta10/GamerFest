@@ -1,15 +1,6 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const { User } = require('../models');
-require('dotenv').config();
-
-const generateToken = (user) => {
-  return jwt.sign(
-    { id: user.id, username: user.username, role: user.role },
-    process.env.JWT_SECRET || 'gamerfest_jwt_secret_key_2026_super_secret',
-    { expiresIn: '30d' }
-  );
-};
+const { generateToken } = require('../config/jwt');
 
 exports.register = async (req, res) => {
   try {
@@ -55,7 +46,8 @@ exports.register = async (req, res) => {
       }
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Error en el registro de usuario.', error: error.message });
+    console.error('Error en el registro de usuario.', error);
+    return res.status(500).json({ message: 'Error en el registro de usuario.' });
   }
 };
 
@@ -100,7 +92,8 @@ exports.login = async (req, res) => {
       }
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Error en el inicio de sesión.', error: error.message });
+    console.error('Error en el inicio de sesión.', error);
+    return res.status(500).json({ message: 'Error en el inicio de sesión.' });
   }
 };
 
@@ -116,6 +109,7 @@ exports.getMe = async (req, res) => {
       }
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Error al obtener datos del perfil.', error: error.message });
+    console.error('Error al obtener datos del perfil.', error);
+    return res.status(500).json({ message: 'Error al obtener datos del perfil.' });
   }
 };
