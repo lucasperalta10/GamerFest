@@ -13,6 +13,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Favorites from './pages/Favorites';
 import AdminDashboard from './pages/AdminDashboard';
+import About from './pages/About';
 
 import './App.css';
 
@@ -28,6 +29,7 @@ function App() {
               <Route path="/calendar" element={<CalendarView />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/about" element={<About />} />
               <Route
                 path="/favorites"
                 element={
