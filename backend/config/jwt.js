@@ -4,10 +4,8 @@ require('dotenv').config();
 const getJwtSecret = () => {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('FATAL: JWT_SECRET no está configurado en las variables de entorno.');
-    }
-    return 'gamerfest_jwt_secret_dev_key_change_in_production';
+    console.warn('ADVERTENCIA: JWT_SECRET no está configurado. Usando clave por defecto.');
+    return 'gamerfest_jwt_secret_key_2026_default_fallback';
   }
   return secret;
 };
