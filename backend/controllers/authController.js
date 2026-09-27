@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const { Op } = require('sequelize');
 const { User } = require('../models');
 const { generateToken } = require('../config/jwt');
 
@@ -13,7 +14,7 @@ exports.register = async (req, res) => {
     // Verificar si el correo o usuario ya existe
     const existingUser = await User.findOne({
       where: {
-        [require('sequelize').Op.or]: [{ email }, { username }]
+        [Op.or]: [{ email }, { username }]
       }
     });
 
@@ -62,7 +63,7 @@ exports.login = async (req, res) => {
     // Buscar por correo o nombre de usuario
     const user = await User.findOne({
       where: {
-        [require('sequelize').Op.or]: [
+        [Op.or]: [
           { email: emailOrUsername },
           { username: emailOrUsername }
         ]
