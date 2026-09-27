@@ -59,21 +59,6 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date() });
 });
 
-// Ruta para disparar la importación del backup completo
-app.get('/api/admin/seed-backup', async (req, res) => {
-  try {
-    const importBackup = require('./seeders/importBackup');
-    const success = await importBackup();
-    if (success) {
-      return res.status(200).json({ message: 'Backup de XAMPP importado exitosamente en Railway.' });
-    } else {
-      return res.status(404).json({ message: 'No se encontró el archivo backup.sql en el servidor.' });
-    }
-  } catch (error) {
-    return res.status(500).json({ error: error.message, stack: error.stack });
-  }
-});
-
 // Sincronizar Base de Datos y arrancar Servidor
 async function startServer() {
   try {
@@ -83,15 +68,6 @@ async function startServer() {
     
     await sequelize.sync();
     console.log('Modelos de base de datos sincronizados.');
-
-    // Verificar si la base de datos necesita la carga del backup completo de XAMPP
-    const { Game } = require('./models');
-    const importBackup = require('./seeders/importBackup');
-    const gameCount = await Game.count();
-    if (gameCount < 5) {
-      console.log(`Pocos juegos detectados (${gameCount}). Importando datos completos de XAMPP...`);
-      await importBackup();
-    }
 
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Servidor de GamerFest corriendo en el puerto ${PORT}`);
