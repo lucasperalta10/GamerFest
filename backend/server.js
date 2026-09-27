@@ -69,6 +69,15 @@ async function startServer() {
     await sequelize.sync();
     console.log('Modelos de base de datos sincronizados.');
 
+    // Verificar si la base de datos necesita la carga del backup completo de XAMPP
+    const { Game } = require('./models');
+    const importBackup = require('./seeders/importBackup');
+    const gameCount = await Game.count();
+    if (gameCount < 5) {
+      console.log(`Pocos juegos detectados (${gameCount}). Importando datos completos de XAMPP...`);
+      await importBackup();
+    }
+
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Servidor de GamerFest corriendo en el puerto ${PORT}`);
     });
