@@ -13,19 +13,29 @@ const favoriteRoutes = require('./routes/favoriteRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Configuración de CORS dinámica
-const allowedOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(',').map((origin) => origin.trim())
-  : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'];
-
+// Configuración de CORS más flexible y robusta para producción y desarrollo
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Permitir peticiones sin origen (como Postman/curl/móvil) o si el origen está permitido
-      if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      // Si no hay origin (postman/mobile) o estamos en desarrollo/producción
+      if (!origin) return callback(null, true);
+      
+      const allowedOrigins = process.env.FRONTEND_URL
+        ? process.env.FRONTEND_URL.split(',').map((o) => o.trim().replace(/\/$/, ''))
+        : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'];
+
+      const cleanOrigin = origin.replace(/\/$/, '');
+
+      // Permitir si coincide exactamente, si es wildcard, o si es un despliegue de Vercel
+      if (
+        allowedOrigins.includes('*') ||
+        allowedOrigins.includes(cleanOrigin) ||
+        cleanOrigin.endsWith('.vercel.app') ||
+        cleanOrigin.includes('localhost') ||
+        cleanOrigin.includes('127.0.0.1')
+      ) {
         callback(null, true);
       } else {
-        // Rechazo estándar de CORS: el navegador bloquea la petición sin respuesta 500
         console.warn(`CORS bloqueado para el origen: ${origin}`);
         callback(null, false);
       }
