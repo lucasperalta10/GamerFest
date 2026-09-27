@@ -5,16 +5,26 @@ const sequelize = require('../config/database');
 async function importBackup() {
   try {
     console.log('--- Importando datos completos desde backup.sql ---');
-    const sqlPath = path.join(__dirname, '../backup.sql');
-    if (!fs.existsSync(sqlPath)) {
-      console.log('No se encontró backend/backup.sql, saltando importación.');
-      return;
+    
+    const possiblePaths = [
+      path.join(__dirname, '../backup.sql'),
+      path.join(__dirname, '../../backup.sql'),
+      path.join(process.cwd(), 'backup.sql'),
+      path.join(process.cwd(), 'backend/backup.sql'),
+    ];
+
+    let sqlPath = possiblePaths.find(p => fs.existsSync(p));
+
+    if (!sqlPath) {
+      console.log('No se encontró el archivo backup.sql en ninguna ubicación.');
+      return false;
     }
+
+    console.log('Cargando backup desde:', sqlPath);
     const sql = fs.readFileSync(sqlPath, 'utf8');
 
     await sequelize.query('SET FOREIGN_KEY_CHECKS = 0;');
 
-    // Dividir sentencias SQL por punto y coma al final de línea
     const statements = sql
       .split(/;\r?\n/)
       .map(s => s.trim())
@@ -32,8 +42,10 @@ async function importBackup() {
 
     await sequelize.query('SET FOREIGN_KEY_CHECKS = 1;');
     console.log('--- Importación de datos de XAMPP completada con éxito ---');
+    return true;
   } catch (error) {
     console.error('Error durante la importación del backup:', error);
+    throw error;
   }
 }
 
