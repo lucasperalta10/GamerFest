@@ -47,8 +47,8 @@ exports.register = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error en el registro de usuario.', error);
-    return res.status(500).json({ message: 'Error en el registro de usuario.' });
+    console.error('Error en el registro de usuario:', error);
+    return res.status(500).json({ message: 'Error en el registro de usuario.', error: error.message, stack: error.stack });
   }
 };
 
@@ -93,8 +93,8 @@ exports.login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error en el inicio de sesión.', error);
-    return res.status(500).json({ message: 'Error en el inicio de sesión.' });
+    console.error('Error en el inicio de sesión:', error);
+    return res.status(500).json({ message: 'Error en el inicio de sesión.', error: error.message, stack: error.stack });
   }
 };
 
