@@ -72,7 +72,7 @@ export default function About() {
             <Tag className="text-accent" /> Versión Actual
           </h2>
           <p className="text-secondary" style={{ fontSize: '1.1rem' }}>
-            <strong>v1.0.0</strong> - Lanzamiento del MVP
+            <strong>v1.0.1</strong> - Búsqueda en Calendario, Toggle de Contraseña y Optimizaciones Mobile
           </p>
         </div>
 

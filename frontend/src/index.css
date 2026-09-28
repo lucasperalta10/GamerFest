@@ -245,7 +245,7 @@ select.form-control {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 40px;
+  padding: 16px 40px;
   background: rgba(10, 11, 16, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -253,6 +253,34 @@ select.form-control {
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+.nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mobile-menu-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-purple);
+}
+
+.nav-menu-content {
+  display: flex;
+  align-items: center;
+  gap: 32px;
 }
 
 .nav-brand {
@@ -273,6 +301,12 @@ select.form-control {
   align-items: center;
   gap: 24px;
   list-style: none;
+}
+
+.nav-auth-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .nav-link {
@@ -619,21 +653,102 @@ select.form-control {
 
 /* Responsive details */
 @media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    gap: 16px;
-    padding: 16px;
+  main.content {
+    padding: 20px 12px;
   }
-  .nav-links {
-    gap: 16px;
-    flex-wrap: wrap;
+
+  .navbar {
+    padding: 14px 20px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-header {
+    width: 100%;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
     justify-content: center;
   }
+
+  .nav-menu-content {
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 12px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .nav-menu-content.open {
+    display: flex;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-link {
+    justify-content: center;
+    padding: 10px;
+    font-size: 1.05rem;
+    width: 100%;
+  }
+
+  .nav-auth-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .nav-auth-actions .btn {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
   .calendar-grid {
     grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    padding: 6px;
+  }
+
+  .calendar-day {
+    min-height: 70px;
+    padding: 4px;
+  }
+
+  .calendar-day-num {
     font-size: 0.8rem;
   }
-  .calendar-day {
-    min-height: 80px;
+
+  .calendar-event-item {
+    font-size: 0.65rem;
+    padding: 2px 4px;
+  }
+
+  .modal-container {
+    padding: 20px;
+    width: 95%;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: 2rem !important;
+  }
+
+  .page-subtitle {
+    font-size: 0.95rem !important;
   }
 }

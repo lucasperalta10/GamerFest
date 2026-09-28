@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Filter, Gamepad, Calendar as CalendarIcon, ExternalLink } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Filter, Gamepad, Calendar as CalendarIcon, ExternalLink, Search, LayoutGrid, List } from 'lucide-react';
 import { API_URL } from '../context/AppContext';
 import Modal from '../components/Modal';
 
@@ -8,6 +8,8 @@ export default function CalendarView() {
   const [events, setEvents] = useState([]);
   const [games, setGames] = useState([]);
   const [filterType, setFilterType] = useState('todos'); // 'todos' | 'showcase' | 'conferencia' | 'premiacion' | 'lanzamiento' | 'juego'
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState(() => typeof window !== 'undefined' && window.innerWidth < 640 ? 'list' : 'grid');
   
   // Detalle Modal
   const [selectedDetail, setSelectedDetail] = useState(null);
@@ -103,6 +105,7 @@ export default function CalendarView() {
   ];
 
   const daysOfWeek = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  const fullDaysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
   // Formateadores de fecha para detalle modal
   const formatDate = (dateString) => {
@@ -129,6 +132,26 @@ export default function CalendarView() {
     }) + ' hs';
   };
 
+  // Filtrar celda y sus contenidos según query y tipo
+  const filterCellItems = (cell) => {
+    if (cell.empty) return { events: [], games: [] };
+
+    const showEvents = filterType === 'todos' || 
+      (filterType !== 'juego' && filterType === cell.events[0]?.type) ||
+      cell.events.some(e => e.type === filterType);
+      
+    const showGames = filterType === 'todos' || filterType === 'juego';
+    const query = searchQuery.trim().toLowerCase();
+
+    const filteredEvents = (showEvents ? cell.events.filter(e => filterType === 'todos' || e.type === filterType) : [])
+      .filter(e => !query || e.title.toLowerCase().includes(query) || (e.description && e.description.toLowerCase().includes(query)));
+
+    const filteredGames = (showGames ? cell.games : [])
+      .filter(g => !query || g.title.toLowerCase().includes(query) || (g.description && g.description.toLowerCase().includes(query)));
+
+    return { filteredEvents, filteredGames };
+  };
+
   return (
     <div>
       <header className="page-header">
@@ -152,88 +175,213 @@ export default function CalendarView() {
           </button>
         </div>
 
-        {/* Filtros */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Filter size={16} style={{ color: 'var(--text-muted)' }} />
-          <select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            className="form-control"
-            style={{ width: '200px' }}
-          >
-            <option value="todos">Todos los eventos</option>
-            <option value="showcase">Solo Showcases</option>
-            <option value="conferencia">Solo Conferencias</option>
-            <option value="premiacion">Solo Premiaciones</option>
-            <option value="lanzamiento">Lanzamientos de Evento</option>
-            <option value="juego">Lanzamientos de Juegos</option>
-          </select>
+        {/* Búsqueda, Filtros y Toggle Vista */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <div style={{ position: 'relative', minWidth: '200px', flex: '1' }}>
+            <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+            <input
+              type="text"
+              placeholder="Buscar evento o juego..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="form-control"
+              style={{ paddingLeft: '36px', fontSize: '0.9rem' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Filter size={16} style={{ color: 'var(--text-muted)' }} />
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="form-control"
+              style={{ width: '160px', fontSize: '0.9rem' }}
+            >
+              <option value="todos">Todos los eventos</option>
+              <option value="showcase">Solo Showcases</option>
+              <option value="conferencia">Solo Conferencias</option>
+              <option value="premiacion">Solo Premiaciones</option>
+              <option value="lanzamiento">Lanzamientos de Evento</option>
+              <option value="juego">Lanzamientos de Juegos</option>
+            </select>
+          </div>
+
+          {/* Toggle de Modo de Vista (Grilla vs Lista) */}
+          <div className="view-mode-toggle" style={{ display: 'flex', background: 'var(--bg-secondary)', padding: '4px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`btn ${viewMode === 'grid' ? 'btn-primary' : 'btn-secondary'}`}
+              style={{ padding: '6px 10px', borderRadius: 'var(--radius-sm)' }}
+              title="Vista Grilla"
+            >
+              <LayoutGrid size={16} />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`btn ${viewMode === 'list' ? 'btn-primary' : 'btn-secondary'}`}
+              style={{ padding: '6px 10px', borderRadius: 'var(--radius-sm)' }}
+              title="Vista Lista / Agenda"
+            >
+              <List size={16} />
+            </button>
+          </div>
         </div>
 
       </div>
 
-      {/* Grilla de Calendario */}
-      <div className="calendar-grid">
-        {/* Encabezados de días */}
-        {daysOfWeek.map((day, idx) => (
-          <div key={idx} className="calendar-day-label">
-            {day}
-          </div>
-        ))}
-
-        {/* Celdas */}
-        {dayCells.map((cell, idx) => {
-          if (cell.empty) {
-            return <div key={idx} className="calendar-day empty"></div>;
-          }
-
-          // Filtrar items según el tipo de filtro seleccionado
-          const showEvents = filterType === 'todos' || 
-            (filterType !== 'juego' && filterType === cell.events[0]?.type) || // simplificación
-            cell.events.some(e => e.type === filterType);
-            
-          const showGames = filterType === 'todos' || filterType === 'juego';
-
-          const filteredEvents = showEvents ? cell.events.filter(e => filterType === 'todos' || e.type === filterType) : [];
-          const filteredGames = showGames ? cell.games : [];
-
-          // Determinar si hoy es esta celda
-          const today = new Date();
-          const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === cell.dayNum;
-
-          return (
-            <div key={idx} className={`calendar-day ${isToday ? 'today' : ''}`}>
-              <div className="calendar-day-num">{cell.dayNum}</div>
-              
-              <div className="calendar-events-container">
-                {/* Mostrar Lanzamientos de Juegos */}
-                {filteredGames.map(game => (
-                  <div
-                    key={`g-${game.id}`}
-                    className="calendar-event-item event-type-lanzamiento"
-                    onClick={() => handleOpenDetail(game, 'game')}
-                    title={`Lanzamiento: ${game.title}`}
-                  >
-                    🚀 {game.title}
-                  </div>
-                ))}
-
-                {/* Mostrar Eventos */}
-                {filteredEvents.map(event => (
-                  <div
-                    key={`e-${event.id}`}
-                    className={`calendar-event-item event-type-${event.type}`}
-                    onClick={() => handleOpenDetail(event, 'event')}
-                    title={event.title}
-                  >
-                    {event.title}
-                  </div>
-                ))}
-              </div>
+      {/* VISTA GRILLA */}
+      {viewMode === 'grid' ? (
+        <div className="calendar-grid">
+          {/* Encabezados de días */}
+          {daysOfWeek.map((day, idx) => (
+            <div key={idx} className="calendar-day-label">
+              {day}
             </div>
-          );
-        })}
-      </div>
+          ))}
+
+          {/* Celdas */}
+          {dayCells.map((cell, idx) => {
+            if (cell.empty) {
+              return <div key={idx} className="calendar-day empty"></div>;
+            }
+
+            const { filteredEvents, filteredGames } = filterCellItems(cell);
+            const today = new Date();
+            const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === cell.dayNum;
+
+            return (
+              <div key={idx} className={`calendar-day ${isToday ? 'today' : ''}`}>
+                <div className="calendar-day-num">{cell.dayNum}</div>
+                
+                <div className="calendar-events-container">
+                  {filteredGames.map(game => (
+                    <div
+                      key={`g-${game.id}`}
+                      className="calendar-event-item event-type-lanzamiento"
+                      onClick={() => handleOpenDetail(game, 'game')}
+                      title={`Lanzamiento: ${game.title}`}
+                    >
+                      🚀 {game.title}
+                    </div>
+                  ))}
+
+                  {filteredEvents.map(event => (
+                    <div
+                      key={`e-${event.id}`}
+                      className={`calendar-event-item event-type-${event.type}`}
+                      onClick={() => handleOpenDetail(event, 'event')}
+                      title={event.title}
+                    >
+                      {event.title}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        /* VISTA LISTA / AGENDA (Ideal para Mobile) */
+        <div className="calendar-list-view" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {dayCells.filter(cell => !cell.empty).map((cell) => {
+            const { filteredEvents, filteredGames } = filterCellItems(cell);
+            if (filteredEvents.length === 0 && filteredGames.length === 0) {
+              return null; // Omitir días sin eventos al filtrar en lista
+            }
+
+            const dateObj = new Date(year, month, cell.dayNum);
+            const dayName = fullDaysOfWeek[dateObj.getDay()];
+            const today = new Date();
+            const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === cell.dayNum;
+
+            return (
+              <div
+                key={`list-${cell.dayNum}`}
+                className="glass-panel"
+                style={{
+                  padding: '16px 20px',
+                  borderLeft: isToday ? '4px solid var(--accent-cyan)' : '1px solid var(--border-color)',
+                  background: isToday ? 'rgba(6, 182, 212, 0.05)' : 'var(--bg-glass)'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <h3 style={{ fontSize: '1.1rem', color: isToday ? 'var(--accent-cyan)' : 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>{dayName} {cell.dayNum} de {monthNames[month]}</span>
+                    {isToday && <span style={{ fontSize: '0.75rem', background: 'var(--accent-cyan)', color: '#000', padding: '2px 8px', borderRadius: 'var(--radius-full)', fontWeight: 700 }}>HOY</span>}
+                  </h3>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {filteredGames.map(game => (
+                    <div
+                      key={`list-g-${game.id}`}
+                      onClick={() => handleOpenDetail(game, 'game')}
+                      style={{
+                        padding: '12px',
+                        borderRadius: 'var(--radius-md)',
+                        background: 'rgba(245, 158, 11, 0.1)',
+                        border: '1px solid rgba(245, 158, 11, 0.3)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: '12px'
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: '600', color: '#fbbf24', fontSize: '0.95rem' }}>
+                          🚀 {game.title}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                          Lanzamiento de juego
+                        </div>
+                      </div>
+                      <span className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.8rem' }}>Ver detalle</span>
+                    </div>
+                  ))}
+
+                  {filteredEvents.map(event => (
+                    <div
+                      key={`list-e-${event.id}`}
+                      onClick={() => handleOpenDetail(event, 'event')}
+                      style={{
+                        padding: '12px',
+                        borderRadius: 'var(--radius-md)',
+                        background: event.type === 'showcase' ? 'rgba(139, 92, 246, 0.1)' : event.type === 'conferencia' ? 'rgba(6, 182, 212, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+                        border: `1px solid ${event.type === 'showcase' ? 'rgba(139, 92, 246, 0.3)' : event.type === 'conferencia' ? 'rgba(6, 182, 212, 0.3)' : 'var(--border-color)'}`,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: '12px'
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '0.95rem' }}>
+                          {event.title}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '2px', textTransform: 'capitalize' }}>
+                          Evento ({event.type})
+                        </div>
+                      </div>
+                      <span className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: '0.8rem' }}>Ver detalle</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+
+          {dayCells.filter(c => !c.empty).every(c => {
+            const { filteredEvents, filteredGames } = filterCellItems(c);
+            return filteredEvents.length === 0 && filteredGames.length === 0;
+          }) && (
+            <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+              No hay eventos ni lanzamientos que coincidan con los filtros seleccionados para este mes.
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Modal de Detalle */}
       <Modal
