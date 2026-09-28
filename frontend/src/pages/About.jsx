@@ -37,7 +37,7 @@ export default function About() {
         </div>
 
         {/* Tecnologías */}
-        <div>
+        {/*<div>
           <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem', color: 'var(--text-primary)' }}>
             <Code className="text-accent" /> Tecnologías Usadas
           </h2>
@@ -64,7 +64,7 @@ export default function About() {
               </div>
             </div>
           </div>
-        </div>
+        </div>*/}
 
         {/* Versión */}
         <div>
@@ -72,7 +72,7 @@ export default function About() {
             <Tag className="text-accent" /> Versión Actual
           </h2>
           <p className="text-secondary" style={{ fontSize: '1.1rem' }}>
-            <strong>v1.0.1</strong> - Búsqueda en Calendario, Toggle de Contraseña y Optimizaciones Mobile
+            <strong>v1.0.1</strong> - Mejoras de UI
           </p>
         </div>
 
