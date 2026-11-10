@@ -70,24 +70,25 @@ export default function EventCard({ event, onDetailClick }) {
         <p className="card-desc">{event.description}</p>
         
         <div className="card-meta">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Calendar size={14} style={{ color: 'var(--accent-cyan)' }} />
-            <span>{formatDateTime(event.event_date)}</span>
-          </div>
+          <div className="card-date-row">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Calendar size={14} style={{ color: 'var(--accent-cyan)', flexShrink: 0 }} />
+              <span>{formatDateTime(event.event_date)}</span>
+            </div>
 
-          {event.location_link && (
-            <a
-              href={event.location_link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nav-link"
-              style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', display: 'flex', alignItems: 'center', gap: '4px' }}
-              onClick={(e) => e.stopPropagation()} // Detener propagación
-            >
-              <LinkIcon size={12} />
-              Enlace
-            </a>
-          )}
+            {event.location_link && (
+              <a
+                href={event.location_link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="event-link-btn"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <LinkIcon size={12} />
+                <span>Enlace</span>
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </div>
