@@ -52,21 +52,17 @@ export default function GameCard({ game, onDetailClick }) {
         <p className="card-desc">{game.description}</p>
         
         <div className="card-meta">
-          {game.platforms && game.platforms.length > 0 && (
-            <div className="card-platforms">
-              {game.platforms.map(p => (
-                <span key={p.id} className="platform-tag">
-                  {p.name}
-                </span>
-              ))}
-            </div>
-          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Calendar size={14} style={{ color: 'var(--accent-purple)' }} />
+            <span>{formatDate(game.release_date)}</span>
+          </div>
 
-          <div className="card-date-row">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Calendar size={14} style={{ color: 'var(--accent-purple)', flexShrink: 0 }} />
-              <span>{formatDate(game.release_date)}</span>
-            </div>
+          <div className="card-platforms">
+            {game.platforms && game.platforms.map(p => (
+              <span key={p.id} className="platform-tag">
+                {p.name}
+              </span>
+            ))}
           </div>
         </div>
       </div>
